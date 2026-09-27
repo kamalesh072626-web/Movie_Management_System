@@ -1,0 +1,167 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}{{ movie.title }} | Movie Collection Manager{% endblock %}
+
+{% block content %}
+
+<div class="container detail-page-container">
+
+    <!-- BREADCRUMB NAVIGATION -->
+    <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+        <a href="{% url 'movie_list' %}" class="breadcrumb-link">← Back to Collection</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">{{ movie.title }}</span>
+    </nav>
+
+    <!-- CINEMATIC MOVIE SHOWCASE CARD -->
+    <div class="movie-detail-card">
+
+        <!-- AMBIENT BACKDROP LIGHT -->
+        <div class="detail-ambient-backdrop poster-genre-{{ movie.genre|lower }}" aria-hidden="true"></div>
+
+        <div class="detail-layout">
+
+            <!-- LEFT: ARTISTIC POSTER / VISUAL SHOWCASE -->
+            <div class="detail-poster-col">
+                <div class="detail-poster-frame poster-genre-{{ movie.genre|lower }}">
+                    <div class="detail-poster-pattern"></div>
+
+                    <!-- Genre Themed Large Icon -->
+                    <div class="detail-genre-icon">
+                        {% if movie.genre == "Action" %}💥
+                        {% elif movie.genre == "Comedy" %}😂
+                        {% elif movie.genre == "Drama" %}🎭
+                        {% elif movie.genre == "Horror" %}👻
+                        {% elif movie.genre == "Romance" %}💖
+                        {% elif movie.genre == "Sci-Fi" %}🚀
+                        {% elif movie.genre == "Thriller" %}🔍
+                        {% else %}🎬{% endif %}
+                    </div>
+
+                    <div class="detail-poster-badge-top">
+                        <span class="genre-pill-glow">{{ movie.genre }}</span>
+                        {% if movie.watched %}
+                            <span class="status-pill status-watched">✓ Watched</span>
+                        {% else %}
+                            <span class="status-pill status-unwatched">○ Unwatched</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-poster-footer">
+                        <div class="poster-title-watermark">{{ movie.title }}</div>
+                        <div class="poster-subline">{{ movie.release_year }} • {{ movie.language }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: COMPREHENSIVE MOVIE DOSSIER -->
+            <div class="detail-info-col">
+
+                <div class="detail-header-group">
+                    <div class="detail-tag-row">
+                        <span class="tag-accent">{{ movie.genre }}</span>
+                        <span class="tag-year">{{ movie.release_year }}</span>
+                        <span class="tag-duration">⏱ {{ movie.duration }} min</span>
+                        {% if movie.watched %}
+                            <span class="tag-watched">✓ Watched</span>
+                        {% else %}
+                            <span class="tag-unwatched">○ Unwatched</span>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="detail-title">{{ movie.title }}</h1>
+
+                    <div class="detail-director-row">
+                        <span class="label-muted">Directed by</span>
+                        <strong class="director-name">{{ movie.director }}</strong>
+                    </div>
+                </div>
+
+                <!-- KEY METRICS GRID -->
+                <div class="detail-stats-grid">
+                    <div class="metric-box">
+                        <span class="metric-title">Rating</span>
+                        <div class="metric-value-row">
+                            <span class="star-gold">⭐</span>
+                            <strong class="metric-val">{{ movie.rating }}</strong>
+                            <span class="metric-max">/10</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-box">
+                        <span class="metric-title">Language</span>
+                        <strong class="metric-val text-cyan">{{ movie.language }}</strong>
+                    </div>
+
+                    <div class="metric-box">
+                        <span class="metric-title">Release Year</span>
+                        <strong class="metric-val">{{ movie.release_year }}</strong>
+                    </div>
+
+                    <div class="metric-box">
+                        <span class="metric-title">Runtime</span>
+                        <strong class="metric-val">{{ movie.duration }}<span class="metric-unit">min</span></strong>
+                    </div>
+                </div>
+
+                <!-- SYNOPSIS / DESCRIPTION -->
+                <div class="detail-synopsis-card">
+                    <h3 class="synopsis-heading">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        <span>Synopsis & Notes</span>
+                    </h3>
+
+                    {% if movie.description %}
+                        <p class="synopsis-body">{{ movie.description }}</p>
+                    {% else %}
+                        <p class="synopsis-empty">No detailed overview has been documented for this title yet. You can add synopsis notes by clicking edit below.</p>
+                    {% endif %}
+                </div>
+
+                <!-- TIMESTAMPS -->
+                <div class="detail-timestamps">
+                    <span>Added: {{ movie.created_at|date:"M d, Y" }}</span>
+                    {% if movie.updated_at != movie.created_at %}
+                        <span>• Updated: {{ movie.updated_at|date:"M d, Y" }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="detail-action-buttons">
+                    <a href="{% url 'movie_update' movie.pk %}" class="btn btn-primary btn-md">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span>Edit Movie</span>
+                    </a>
+
+                    <a href="{% url 'movie_delete' movie.pk %}" class="btn btn-danger-outline btn-md">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        <span>Delete Movie</span>
+                    </a>
+
+                    <a href="{% url 'movie_list' %}" class="btn btn-secondary btn-md">
+                        <span>Back to Collection</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

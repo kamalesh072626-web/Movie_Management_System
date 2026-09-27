@@ -1,0 +1,74 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Confirm Deletion | Movie Collection Manager{% endblock %}
+
+{% block content %}
+
+<div class="container delete-page-container">
+
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+        <a href="{% url 'movie_list' %}" class="breadcrumb-link">← Back to Collection</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Delete Confirmation</span>
+    </nav>
+
+    <div class="delete-card-wrapper">
+        <div class="delete-ambient-glow" aria-hidden="true"></div>
+
+        <div class="delete-modal-card">
+
+            <!-- DANGER ICON -->
+            <div class="delete-icon-halo">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+
+            <h1 class="delete-title">Delete Movie</h1>
+
+            <p class="delete-message">
+                Are you sure you want to permanently remove <br>
+                <strong class="delete-movie-title">“{{ movie.title }}”</strong> <br>
+                from your personal collection?
+            </p>
+
+            <div class="delete-movie-preview">
+                <span class="preview-genre">{{ movie.genre }}</span>
+                <span class="preview-year">{{ movie.release_year }}</span>
+                <span class="preview-director">Directed by {{ movie.director }}</span>
+            </div>
+
+            <div class="delete-warning-banner">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span>This action is permanent and cannot be undone.</span>
+            </div>
+
+            <form method="POST" class="delete-action-form">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-danger-solid btn-lg">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    <span>Yes, Delete Movie</span>
+                </button>
+
+                <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-secondary btn-lg">
+                    <span>Cancel & Keep</span>
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

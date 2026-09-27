@@ -1,0 +1,145 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}{{ page_title }} | Movie Collection Manager{% endblock %}
+
+{% block content %}
+
+<div class="container form-page-container">
+
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+        <a href="{% url 'movie_list' %}" class="breadcrumb-link">← Back to Collection</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">{{ page_title }}</span>
+    </nav>
+
+    <div class="form-card-wrapper">
+        <!-- AMBIENT GLOW -->
+        <div class="form-ambient-glow" aria-hidden="true"></div>
+
+        <div class="form-card">
+
+            <div class="form-header">
+                <div class="form-badge-icon">
+                    {% if "Add" in page_title %}✨{% else %}✏️{% endif %}
+                </div>
+                <h1 class="form-heading">{{ page_title }}</h1>
+                <p class="form-subheading">
+                    {% if "Add" in page_title %}
+                        Register a new film into your private cinema database with full metadata.
+                    {% else %}
+                        Update and refine the catalog information for this film.
+                    {% endif %}
+                </p>
+            </div>
+
+            <form method="POST" class="cinematic-form" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert-box alert-danger" role="alert">
+                        <div class="alert-icon">⚠</div>
+                        <div class="alert-text">{{ form.non_field_errors }}</div>
+                    </div>
+                {% endif %}
+
+                <div class="form-fields-grid">
+                    {% for field in form %}
+                        {% if field.field.widget.input_type == "checkbox" %}
+                            <!-- CHECKBOX ROW (Watched status) -->
+                            <div class="form-group form-group-full form-group-checkbox">
+                                <label class="custom-toggle-label" for="{{ field.id_for_label }}">
+                                    {{ field }}
+                                    <span class="toggle-track">
+                                        <span class="toggle-thumb"></span>
+                                    </span>
+                                    <span class="toggle-text-group">
+                                        <strong class="toggle-title">{{ field.label }}</strong>
+                                        <span class="toggle-description">Mark if you have already watched this movie</span>
+                                    </span>
+                                </label>
+
+                                {% if field.help_text %}
+                                    <small class="field-help-text">{{ field.help_text }}</small>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="field-error-message">
+                                        <span class="error-dot">⚠</span> {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        {% elif field.name == "description" %}
+                            <!-- FULL WIDTH TEXTAREA -->
+                            <div class="form-group form-group-full">
+                                <label for="{{ field.id_for_label }}" class="field-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                                </label>
+
+                                <div class="input-wrapper">
+                                    {{ field }}
+                                </div>
+
+                                {% if field.help_text %}
+                                    <small class="field-help-text">{{ field.help_text }}</small>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="field-error-message">
+                                        <span class="error-dot">⚠</span> {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        {% else %}
+                            <!-- STANDARD INPUT / SELECT -->
+                            <div class="form-group form-group-half">
+                                <label for="{{ field.id_for_label }}" class="field-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                                </label>
+
+                                <div class="input-wrapper">
+                                    {{ field }}
+                                </div>
+
+                                {% if field.help_text %}
+                                    <small class="field-help-text">{{ field.help_text }}</small>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="field-error-message">
+                                        <span class="error-dot">⚠</span> {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="form-actions-bar">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        <span>Save Movie</span>
+                    </button>
+
+                    <a href="{% url 'movie_list' %}" class="btn btn-secondary btn-lg">
+                        <span>Cancel</span>
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

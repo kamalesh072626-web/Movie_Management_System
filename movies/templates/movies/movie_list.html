@@ -1,0 +1,390 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Your Movie Collection | Movie Collection Manager{% endblock %}
+
+{% block content %}
+
+<!-- CINEMATIC HERO SECTION (NETFLIX-INSPIRED IMMERSIVE SPOTLIGHT) -->
+<section class="hero-section" aria-label="Hero Spotlight">
+    <!-- Multi-Layered Cinematic Backdrop -->
+    <div class="hero-backdrop" aria-hidden="true">
+        <!-- Abstract Movie Poster Collage Simulation -->
+        <div class="hero-poster-collage">
+            <div class="collage-col col-1">
+                <div class="collage-card c-action"><span>Action</span></div>
+                <div class="collage-card c-scifi"><span>Sci-Fi</span></div>
+                <div class="collage-card c-drama"><span>Drama</span></div>
+                <div class="collage-card c-thriller"><span>Thriller</span></div>
+            </div>
+            <div class="collage-col col-2">
+                <div class="collage-card c-comedy"><span>Comedy</span></div>
+                <div class="collage-card c-horror"><span>Horror</span></div>
+                <div class="collage-card c-romance"><span>Romance</span></div>
+                <div class="collage-card c-action"><span>Blockbuster</span></div>
+            </div>
+            <div class="collage-col col-3">
+                <div class="collage-card c-drama"><span>Cinema</span></div>
+                <div class="collage-card c-thriller"><span>Mystery</span></div>
+                <div class="collage-card c-scifi"><span>Futuristic</span></div>
+                <div class="collage-card c-comedy"><span>Classics</span></div>
+            </div>
+            <div class="collage-col col-4">
+                <div class="collage-card c-action"><span>Adventure</span></div>
+                <div class="collage-card c-horror"><span>Dark Tales</span></div>
+                <div class="collage-card c-romance"><span>Passion</span></div>
+                <div class="collage-card c-drama"><span>Indie</span></div>
+            </div>
+            <div class="collage-col col-5">
+                <div class="collage-card c-scifi"><span>Cosmos</span></div>
+                <div class="collage-card c-thriller"><span>Suspense</span></div>
+                <div class="collage-card c-comedy"><span>Laughter</span></div>
+                <div class="collage-card c-action"><span>Epic</span></div>
+            </div>
+        </div>
+
+        <!-- Vignettes and Ambient Glowing Orbs -->
+        <div class="hero-vignette-overlay"></div>
+        <div class="hero-glow-orb orb-red"></div>
+        <div class="hero-glow-orb orb-purple"></div>
+    </div>
+
+    <!-- Vertically Centered Hero Content -->
+    <div class="hero-content-container">
+        <div class="hero-pill-badge">
+            <span class="pulse-dot"></span> Cinematic Movie Dashboard
+        </div>
+
+        <div class="hero-text">
+            <h1 class="hero-headline">
+                YOUR MOVIE <br>
+                <span class="text-gradient">COLLECTION</span>
+            </h1>
+
+            <p class="hero-subtext">
+                Organize, discover and manage every movie you love.
+            </p>
+        </div>
+
+        <!-- Primary & Secondary CTA Buttons -->
+        <div class="hero-actions">
+            <a href="{% url 'movie_create' %}" class="btn btn-primary btn-lg">
+                <span class="btn-icon">+</span>
+                <span>Add Movie</span>
+            </a>
+            <a href="#collection-section" class="btn btn-secondary btn-lg">
+                <span>Explore Collection</span>
+                <span class="btn-arrow">↓</span>
+            </a>
+        </div>
+
+        <!-- Quick Jump Search Field (Streaming Platform Aesthetic) -->
+        <form method="GET" action="#collection-section" class="hero-quick-search">
+            <div class="hero-search-wrapper">
+                <span class="hero-search-icon">🔍</span>
+                <input
+                    type="text"
+                    name="search"
+                    class="hero-search-input"
+                    placeholder="Search by title or director..."
+                    value="{{ search_query }}"
+                    aria-label="Quick Search Movies"
+                >
+                <button type="submit" class="hero-search-submit">
+                    <span>Search</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<div class="container page-content-container">
+
+    <!-- DASHBOARD STATISTIC CARDS -->
+    <section class="dashboard-stats-section" aria-label="Collection Statistics">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-total">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                        <line x1="7" y1="2" x2="7" y2="22"></line>
+                        <line x1="17" y1="2" x2="17" y2="22"></line>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <line x1="2" y1="7" x2="7" y2="7"></line>
+                        <line x1="2" y1="17" x2="7" y2="17"></line>
+                        <line x1="17" y1="17" x2="22" y2="17"></line>
+                        <line x1="17" y1="7" x2="22" y2="7"></line>
+                    </svg>
+                </div>
+                <div class="stat-data">
+                    <span class="stat-label">Total in View</span>
+                    <strong class="stat-value" id="stat-total-movies">{{ movies|length }}</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-watched">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-data">
+                    <span class="stat-label">Watched</span>
+                    <strong class="stat-value text-emerald" id="stat-watched-movies">—</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-unwatched">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="stat-data">
+                    <span class="stat-label">Unwatched</span>
+                    <strong class="stat-value text-amber" id="stat-unwatched-movies">—</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper icon-rating">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div class="stat-data">
+                    <span class="stat-label">Average Rating</span>
+                    <strong class="stat-value text-gold" id="stat-avg-rating">—</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SEARCH AND FILTER FLOATING GLASS PANEL -->
+    <section class="filter-panel-section" id="search-filter-section" aria-label="Search and Filters">
+        <div class="filter-glass-card">
+            <div class="filter-panel-header">
+                <div class="filter-title-group">
+                    <span class="filter-title-icon">⚡</span>
+                    <h3 class="filter-panel-title">Filter & Refine Collection</h3>
+                </div>
+                <span class="filter-results-badge">
+                    {{ movies|length }} item{{ movies|length|pluralize }} matching
+                </span>
+            </div>
+
+            <form method="GET" class="filter-form">
+                <div class="filter-grid">
+
+                    <!-- Search Input -->
+                    <div class="filter-field-group">
+                        <label for="search-input" class="field-label">Search Library</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">🔍</span>
+                            <input
+                                id="search-input"
+                                type="text"
+                                name="search"
+                                class="form-input"
+                                placeholder="Search title or director..."
+                                value="{{ search_query }}"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Genre Select -->
+                    <div class="filter-field-group">
+                        <label for="genre-select" class="field-label">Genre</label>
+                        <div class="select-wrapper">
+                            <select id="genre-select" name="genre" class="form-select">
+                                <option value="">All Genres</option>
+                                {% for value, label in genres %}
+                                    <option
+                                        value="{{ value }}"
+                                        {% if selected_genre == value %}selected{% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Watched Status Select -->
+                    <div class="filter-field-group">
+                        <label for="watched-select" class="field-label">Watch Status</label>
+                        <div class="select-wrapper">
+                            <select id="watched-select" name="watched" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option value="watched" {% if selected_watched == 'watched' %}selected{% endif %}>
+                                    ✓ Watched Only
+                                </option>
+                                <option value="unwatched" {% if selected_watched == 'unwatched' %}selected{% endif %}>
+                                    ○ Unwatched
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="filter-actions-group">
+                        <button type="submit" class="btn btn-primary btn-filter-submit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span>Search</span>
+                        </button>
+
+                        <a href="{% url 'movie_list' %}" class="btn btn-secondary btn-filter-reset" title="Reset all filters">
+                            <span>Reset</span>
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- MOVIE COLLECTION SECTION -->
+    <section class="collection-section" id="collection-section" aria-label="Movie Collection">
+
+        <div class="collection-header">
+            <div>
+                <h2 class="section-title">My Collection</h2>
+                <p class="section-subtitle">Discover, organize and manage every movie you love.</p>
+            </div>
+
+            <div class="collection-meta-indicator">
+                <span class="active-count">{{ movies|length }}</span>
+                <span class="active-text">film{{ movies|length|pluralize }} listed</span>
+            </div>
+        </div>
+
+        {% if movies %}
+            <div class="movie-grid">
+                {% for movie in movies %}
+                    <article
+                        class="movie-card"
+                        data-movie-id="{{ movie.pk }}"
+                        data-watched="{% if movie.watched %}true{% else %}false{% endif %}"
+                        data-rating="{{ movie.rating }}"
+                        data-genre="{{ movie.genre }}"
+                    >
+                        <!-- CINEMATIC ARTISTIC POSTER / THUMBNAIL AREA -->
+                        <div class="movie-card-poster poster-genre-{{ movie.genre|lower }}">
+                            <div class="poster-overlay"></div>
+
+                            <!-- Big Atmospheric Glyph -->
+                            <div class="poster-genre-glyph">
+                                {% if movie.genre == "Action" %}💥
+                                {% elif movie.genre == "Comedy" %}😂
+                                {% elif movie.genre == "Drama" %}🎭
+                                {% elif movie.genre == "Horror" %}👻
+                                {% elif movie.genre == "Romance" %}💖
+                                {% elif movie.genre == "Sci-Fi" %}🚀
+                                {% elif movie.genre == "Thriller" %}🔍
+                                {% else %}🎬{% endif %}
+                            </div>
+
+                            <!-- Rating Floating Ribbon -->
+                            <div class="poster-rating-badge">
+                                <span class="star-icon">⭐</span>
+                                <span class="rating-num">{{ movie.rating }}</span>
+                            </div>
+
+                            <!-- Status Badge -->
+                            {% if movie.watched %}
+                                <div class="poster-status-pill status-watched">
+                                    <span class="status-dot"></span> Watched
+                                </div>
+                            {% else %}
+                                <div class="poster-status-pill status-unwatched">
+                                    <span class="status-dot"></span> Unwatched
+                                </div>
+                            {% endif %}
+
+                            <!-- Poster Bottom Caption -->
+                            <div class="poster-caption">
+                                <span class="poster-genre-label">{{ movie.genre }}</span>
+                                <span class="poster-year-label">{{ movie.release_year }}</span>
+                            </div>
+                        </div>
+
+                        <!-- CARD BODY / DETAILS -->
+                        <div class="movie-card-body">
+                            <div class="card-genre-row">
+                                <span class="genre-tag tag-{{ movie.genre|lower }}">{{ movie.genre }}</span>
+                                <span class="duration-tag">⏱ {{ movie.duration }}m</span>
+                            </div>
+
+                            <h3 class="movie-card-title" title="{{ movie.title }}">
+                                <a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a>
+                            </h3>
+
+                            <p class="movie-director">
+                                <span class="director-prefix">Dir:</span> {{ movie.director }}
+                            </p>
+
+                            <!-- Chips Info Row -->
+                            <div class="movie-meta-chips">
+                                <span class="meta-chip">📅 {{ movie.release_year }}</span>
+                                <span class="meta-chip">🌐 {{ movie.language }}</span>
+                            </div>
+
+                            <!-- Interactive Card Action Buttons -->
+                            <div class="card-actions-grid">
+                                <a href="{% url 'movie_detail' movie.pk %}" class="btn-card-action btn-view" title="View details">
+                                    <span>View</span>
+                                </a>
+                                <a href="{% url 'movie_update' movie.pk %}" class="btn-card-action btn-edit" title="Edit movie">
+                                    <span>Edit</span>
+                                </a>
+                                <a href="{% url 'movie_delete' movie.pk %}" class="btn-card-action btn-delete" title="Delete movie">
+                                    <span>Delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+            <div class="empty-state-card">
+                <div class="empty-icon-halo">
+                    <span class="empty-icon">🎬</span>
+                </div>
+
+                <h3 class="empty-title">No Movies Found</h3>
+                <p class="empty-desc">
+                    No cinematic titles match your active query. Enrich your collection by adding a new film or reset your filters.
+                </p>
+
+                <div class="empty-actions">
+                    <a href="{% url 'movie_create' %}" class="btn btn-primary btn-md">
+                        <span class="btn-icon">+</span>
+                        <span>Add Your First Movie</span>
+                    </a>
+                    <a href="{% url 'movie_list' %}" class="btn btn-secondary btn-md">
+                        <span>Clear All Filters</span>
+                    </a>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}
